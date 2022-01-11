@@ -32,11 +32,23 @@ def evaluate(model):
 
 def predict():
     model = tf.keras.models.load_model('mnist.model')
-    predictions = model.predict([x_test])
-    print(np.argmax(predictions[0]))
-    plt.imshow(x_test[0], cmap=plt.cm.binary)
-    plt.show()
+    imagenumber = 1
+    while os.path.isfile('examples/'+str(imagenumber)+'.png'):
+        try:
+            img = cv2.imread('examples/'+str(imagenumber) +
+                             '.png', cv2.IMREAD_GRAYSCALE)
+            img = np.invert(np.array([img]))
+            prediction = model.predict(img)
+            print(
+                f"image {imagenumber} is probably a  {np.argmax(prediction[0])}")
+            plt.imshow(img[0], cmap=plt.cm.binary)
+            plt.show()
+            imagenumber += 1
+
+        except:
+            print("error")
 
 
 # train()
 # evaluate(tf.keras.models.load_model('mnist.model'))
+predict()
